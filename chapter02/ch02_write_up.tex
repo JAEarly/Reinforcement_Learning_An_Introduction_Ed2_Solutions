@@ -1,0 +1,58 @@
+\section{Multi-armed Bandits}
+
+\subsection*{Exercise 2.1: Two-armed test bed}
+
+The probability of choosing the greedy arm is the probability of exploiting plus the probability of randomly choosing the greedy arm when exploring:
+
+\vspace{-6mm}
+\begin{align}
+P(Greedy) &= P(Exploit) + P(Greedy | Explore) \nonumber \\
+ &= 1 - \epsilon + \frac{\epsilon}{numArms} \label{eqn:2_pgreedy} \\
+ &= 0.5 + \frac{0.5}{2} \nonumber \\
+ &= 0.75 \nonumber
+\end{align}
+
+\subsection*{Exercise 2.2: Bandit example}
+
+It is impossible to determine if an action was definitely greedy from the information given - the agent could explore but happen to choose the greedy option at random, resulting in an action that appears greedy but was in fact exploratory. It is only viable to say if the action was exploratory or possibly exploratory, however one could argue that it is arbitrary whether the agent took the greedy action or explored and randomly selected the greedy action since the outcome is the same. The clearest way to evaluate which actions were definitely exploratory and which were not is to examine the action-value estimates over time:
+
+\vspace{-6mm}
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{c|c|c|c|c|c|c|c}
+    \textbf{Time} & \textbf{Arm 1} & \textbf{Arm 2} & \textbf{Arm 3} & \textbf{Arm 4} & \textbf{Greedy} & \textbf{Action} & \textbf{Reward} \\ 
+	\hline 
+	1 & 0 & 0 & 0 & 0 & Any & 1 - Possibly exploratory & 1 \\ 
+	\hline 
+	2 & 1 & 0 & 0 & 0 & 1 & 2 - Exploratory & 1  \\ 
+	\hline 
+	3 & 1 & 1 & 0 & 0 & 1 or 2 & 2 - Possibly exploratory & 2 \\ 
+	\hline 
+	4 & 1 & 1.5 & 0 & 0 & 2 & 2 - Possibly exploratory & 2 \\ 
+	\hline 
+	5 & 1 & 1.666... & 0 & 0 & 2 & 3 - Exploratory & 0 \\ 
+\end{tabular}  
+\end{center}
+
+\subsection*{Exercise 2.3: Greedy vs \boldmath$\epsilon$-Greedy}
+
+The $\epsilon$-greedy methods are clearly better than the greedy method, therefore it is only necessary to consider the two $\epsilon$-greedy methods. As the action-values converge, the optimal value selection also converges. When the action-values converge, the behaviour for the agent is given by Equation \ref{eqn:2_pgreedy}, which is the upper bound for the probability of selecting the greedy action. By substituting in the relative values of $\epsilon$ for the two methods, it is found that the $\epsilon=0.1$ method is limited to 91\% optimal action selection and the $\epsilon=0.01$ method is limited to 99.01\% optimal action selection, meaning given infinite time steps the $\epsilon=0.01$ method will have a higher cumulative reward. Under the assumption that both methods spend a far longer time with action-values that have converged than they do converging, the improvement of the $\epsilon=0.01$ over the $\epsilon=0.1$ will tend towards $\sim 1.088$.
+
+\begin{tcolorbox}
+In Section 2.5: Tracking a Non-stationary problem, it is mentioned that a constant step-size results in a weighted average of past rewards, and that the sum of the weights $(1-\alpha)^n + \sum_{i=1}^{n} \alpha(1-\alpha)^{n-1}=1$, which the reader is encouraged to check. Below is a proof of the given statement: 
+
+\vspace{-6mm}
+\begin{align*}
+S &= (1-\alpha)^n + \sum_{i=1}^{n} \alpha(1-\alpha)^{n-1}  \\
+&= (1-\alpha)^n + \alpha(1-\alpha)^{n-1} + \alpha(1-\alpha)^{n-2} + \cdots + \alpha(1-\alpha) + \alpha \\
+&= (1-\alpha)(1-\alpha)^{n-1} + \alpha(1-\alpha)^{n-1} + \alpha(1-\alpha)^{n-2} + \cdots + \alpha(1-\alpha) + \alpha \\
+&= (1-\alpha)^{n-1}(1-\alpha+\alpha) + \alpha(1-\alpha)^{n-2} + \cdots + \alpha(1-\alpha) + \alpha \\
+&= (1-\alpha)^{n-1} + \alpha(1-\alpha)^{n-2} + \cdots + \alpha(1-\alpha) + \alpha \\
+& \ \, \vdots \\
+&= 1-\alpha+\alpha \\
+&=1
+\end{align*}
+
+\end{tcolorbox}
+ 	
+
