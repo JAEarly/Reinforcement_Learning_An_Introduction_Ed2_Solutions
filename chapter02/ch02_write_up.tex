@@ -36,7 +36,9 @@ It is impossible to determine if an action was definitely greedy from the inform
 
 \subsection*{Exercise 2.3: Greedy vs \boldmath$\epsilon$-Greedy}
 
-The $\epsilon$-greedy methods are clearly better than the greedy method, therefore it is only necessary to consider the two $\epsilon$-greedy methods. As the action-values converge, the optimal value selection also converges. When the action-values converge, the behaviour for the agent is given by Equation \ref{eqn:2_pgreedy}, which is the upper bound for the probability of selecting the greedy action. By substituting in the relative values of $\epsilon$ for the two methods, it is found that the $\epsilon=0.1$ method is limited to 91\% optimal action selection and the $\epsilon=0.01$ method is limited to 99.01\% optimal action selection, meaning given infinite time steps the $\epsilon=0.01$ method will have a higher cumulative reward. Under the assumption that both methods spend a far longer time with action-values that have converged than they do converging, the improvement of the $\epsilon=0.01$ over the $\epsilon=0.1$ will tend towards $\sim 1.088$.
+The $\epsilon$-greedy methods are clearly better than the greedy method, therefore it is only necessary to consider the two $\epsilon$-greedy methods. As the action-values converge, the optimal value selection also converges. When the action-values converge, the behaviour for the agent is given by Equation \ref{eqn:2_pgreedy}, which is the upper bound for the probability of selecting the greedy action. By substituting in the relative values of $\epsilon$ for the two methods, it is found that the $\epsilon=0.1$ method is limited to 91\% optimal action selection and the $\epsilon=0.01$ method is limited to 99.01\% optimal action selection, meaning given infinite time steps the $\epsilon=0.01$ method will have a higher cumulative reward. Under the assumption that both methods spend a far longer time with action-values that have converged than they do converging, the improvement of the $\epsilon=0.01$ method over the $\epsilon=0.1$ method will tend towards $\sim 1.088$.
+
+\textcolor{red}{Add figure to show convergence.}
 
 \begin{tcolorbox}
 In Section 2.5: Tracking a Non-stationary problem, it is mentioned that a constant step-size results in a weighted average of past rewards, and that the sum of the weights $(1-\alpha)^n + \sum_{i=1}^{n} \alpha(1-\alpha)^{n-1}=1$, which the reader is encouraged to check. Below is a proof of the given statement: 
@@ -54,5 +56,25 @@ S &= (1-\alpha)^n + \sum_{i=1}^{n} \alpha(1-\alpha)^{n-1}  \\
 \end{align*}
 
 \end{tcolorbox}
- 	
+
+\subsection*{Exercise 2.4: Arbitrary step-size parameter weighting}
+
+To determine the weighting of each prior reward for $Q_{n+1}$ when the step-size parameters, $\alpha_{n+1}$, are not constant, a derivation similar to the one for constant step size can be used:
+
+\vspace{-6mm}
+\begin{align*}
+Q_{n+1} &= Q_n + \alpha_n(R_n - Q_n) \\
+&= \alpha_nR_n + (1 - \alpha_n)Q_n \\
+&= \alpha_nR_n + (1 - \alpha_n)\alpha_{n-1}R_{n-1} + (1 - \alpha_n)(1-\alpha_{n-1})Q_{n-1} \\
+&= \alpha_nR_n \\ 
+& \quad + (1 - \alpha_n)\alpha_{n-1}R_{n-1} \\
+& \quad + (1 - \alpha_n)(1 - \alpha_{n-1})\alpha_{n-2}R_{n-2} \\
+& \quad + (1 - \alpha_n)(1 - \alpha_{n-1})(1 - \alpha_{n-2})\alpha_{n-3}R_{n-3} \\
+& \quad \ \, \vdots \\
+& \quad + (1 - \alpha_n)(1-\alpha_{n-1}) \cdots (1-\alpha_3)\alpha_2R_2 \\
+& \quad + (1 - \alpha_n)(1-\alpha_{n-1}) \cdots (1-\alpha_2)\alpha_1R_1 \\
+& \quad + (1 - \alpha_n)(1-\alpha_{n-1}) \cdots (1-\alpha_1)Q_1 \\
+&= \alpha_nR_n + \sum_{i=2}^{n}\Big(\alpha_{i-1}R_{i-1}\prod_{j=i}^{n}(1-\alpha_j)\Big) + Q_1\prod_{i=1}^{n}(1-\alpha_i)\\
+\end{align*}
+
 
