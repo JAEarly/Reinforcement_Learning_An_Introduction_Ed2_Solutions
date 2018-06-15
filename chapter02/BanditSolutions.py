@@ -26,7 +26,8 @@ def runAndPlot(axes, repeats, plays, n, method, config, kwconfig, label, useSave
     axes[0].plot(X, average_rewards, label=label)
     axes[1].plot(X, average_optimals, label=label)
     axes[2].plot(X, np.cumsum(average_rewards), label=label)
-    print("{:^12s}".format(label), "{:1.3f}".format(np.cumsum(average_rewards)[-1]))
+    print("{:^12s}".format(label), "{:1.3f}".format(np.cumsum(average_rewards)[-1]),
+          "{:1.3f}".format(average_rewards[-1]), "{:1.3f}".format(average_optimals[-1]))
     return average_rewards, average_optimals
 
 def softmax(l, tau):
