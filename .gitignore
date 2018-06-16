@@ -3,4 +3,4 @@
 *.synctex.gz
 .idea/
 *__pycache__*
-.p
+*.p
