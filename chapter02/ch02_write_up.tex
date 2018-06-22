@@ -1,6 +1,6 @@
 \section{Multi-armed Bandits}
 
-\subsection*{Exercise 2.1: Two-armed test bed}
+\subsection*{Exercise 2.1: Two-armed Test Bed}
 
 The probability of choosing the greedy arm is the probability of exploiting plus the probability of randomly choosing the greedy arm when exploring:
 
@@ -12,7 +12,7 @@ P(Greedy) &= P(Exploit) + P(Greedy | Explore) \nonumber \\
  &= 0.75 \nonumber
 \end{align}
 
-\subsection*{Exercise 2.2: Bandit example}
+\subsection*{Exercise 2.2: Bandit Example}
 
 It is impossible to determine if an action was definitely greedy from the information given - the agent could explore but happen to choose the greedy option at random, resulting in an action that appears greedy but was in fact exploratory. It is only viable to say if the action was exploratory or possibly exploratory, however one could argue that it is arbitrary whether the agent took the greedy action or explored and randomly selected the greedy action since the outcome is the same. The clearest way to evaluate which actions were definitely exploratory and which were not is to examine the action-value estimates over time:
 
@@ -36,9 +36,15 @@ It is impossible to determine if an action was definitely greedy from the inform
 
 \subsection*{Exercise 2.3: Greedy vs \boldmath$\epsilon$-Greedy}
 
-The $\epsilon$-greedy methods are clearly better than the greedy method, therefore it is only necessary to consider the two $\epsilon$-greedy methods. As the action-values converge, the optimal value selection also converges. When the action-values converge, the behaviour for the agent is given by Equation \ref{eqn:2_pgreedy}, which is the upper bound for the probability of selecting the greedy action. By substituting in the relative values of $\epsilon$ for the two methods, it is found that the $\epsilon=0.1$ method is limited to 91\% optimal action selection and the $\epsilon=0.01$ method is limited to 99.01\% optimal action selection, meaning given infinite time steps the $\epsilon=0.01$ method will have a higher cumulative reward. Under the assumption that both methods spend a far longer time with action-values that have converged than they do converging, the improvement of the $\epsilon=0.01$ method over the $\epsilon=0.1$ method will tend towards $\sim 1.088$.
+The $\epsilon$-greedy methods are clearly better than the greedy method, therefore it is only necessary to consider the two $\epsilon$-greedy methods. As the action-values converge, the optimal value selection also converges. When the action-values converge, the behaviour for the agent is given by Equation \ref{eqn:2_pgreedy}, which is the upper bound for the probability of selecting the greedy action. By substituting in the relative values of $\epsilon$ for the two methods, it is found that the $\epsilon=0.1$ method is limited to 91\% optimal action selection and the $\epsilon=0.01$ method is limited to 99.1\% optimal action selection, meaning given infinite time steps the $\epsilon=0.01$ method will have a higher cumulative reward as it will select the optimal action more often. Based on these limits, the improvement in optimality selection of the $\epsilon=0.01$ method over the $\epsilon=0.1$ method will tend towards $\sim1.088$. This limit, along with a clear demonstrate that the $\epsilon=0.01$ method is more optimal than the $\epsilon=0.1$ method, is shown in Figure \ref{fig:ex2.3_opt-comp}.
 
-\textcolor{red}{Add figure to show convergence.}
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.8]{{chapter02/ex2.3_opt-comp}.png}
+	\caption{A comparison of the optimality of two $\epsilon$-greedy methods, one with $\epsilon=0.1$ and one with $\epsilon=0.01$. The optimality of the two methods was compared by dividing the percentage optimality selection of the $\epsilon=0.01$ method by the percentage optimality selection of the $\epsilon=0.1$ method. The results were averaged over 2000 random and independently chosen bandit tasks, each run for 30000 plays. It is clear to see that $\epsilon=0.01$ is a better choice in the long run as it results in more optimal selection after $\sim7000$ plays. The dotted line is a guide to show that the optimality comparison goes above one and remains above it. The dashed line indicates the limit that the optimality comparison converges to ($\sim1.088$) as derived above.}
+	\label{fig:ex2.3_opt-comp}
+\end{figure}
+
 
 \begin{tcolorbox}
 In Section 2.5: Tracking a Non-stationary problem, it is mentioned that a constant step-size results in a weighted average of past rewards, and that the sum of the weights $(1-\alpha)^n + \sum_{i=1}^{n} \alpha(1-\alpha)^{n-1}=1$, which the reader is encouraged to check. Below is a proof of the given statement: 
@@ -57,7 +63,7 @@ S &= (1-\alpha)^n + \sum_{i=1}^{n} \alpha(1-\alpha)^{n-1}  \\
 
 \end{tcolorbox}
 
-\subsection*{Exercise 2.4: Arbitrary step-size parameter weighting}
+\subsection*{Exercise 2.4: Arbitrary Step-size Parameter Weighting}
 
 To determine the weighting of each prior reward for $Q_{n+1}$ when the step-size parameters, $\alpha_{n+1}$, are not constant, a derivation similar to the one for constant step size can be used:
 
@@ -77,4 +83,18 @@ Q_{n+1} &= Q_n + \alpha_n(R_n - Q_n) \\
 &= \alpha_nR_n + \sum_{i=2}^{n}\Big(\alpha_{i-1}R_{i-1}\prod_{j=i}^{n}(1-\alpha_j)\Big) + Q_1\prod_{i=1}^{n}(1-\alpha_i)\\
 \end{align*}
 
+\subsection*{Exercise 2.5: Non-stationary Problems}
+
+To compare constant step-size and sample-average methods on non-stationary bandit problems, both methods were applied to 2000 random and independently chosen non-stationary bandit tasks (as per the other experiments in the text) which ran for 10000 plays. As expected, the constant step-size method performed better than the sample-average technique as it was able to track the optimal arm with greater accuracy; see Figure \ref{fig:ex2.5_non-stat}. 
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.8]{{chapter02/ex2.5_non-stat}.png}
+	\caption{A comparison of the constant step-size (CS) method with the sample-average (SA) method on a non-stationary multi-armed bandit problem. It is clear to see that CS outperforms SA, reaching more optimal action selection and thus greater total reward over time.}
+	\label{fig:ex2.5_non-stat}
+\end{figure}
+
+\subsection*{Exercise 2.6: Mysterious Spikes}
+
+The mysterious spikes seen when using optimistic action selection are dependent on the number of arms used in the bandit scenario. The first spike is the most significant and easiest to explain - the optimistic initial values mean each of the $n$ arms is pulled at least once before any arm is pulled twice, so the $n+1^{th}$ selection will be the first realistic arm choice, and assuming it is a greedy choice, there is a good chance it is the optimal arm as the algorithm has approximate value estimates for each arm already, hence the sudden jump in optimality choice after the first $n$ pulls. However, if the optimal arm is pulled on the $n + 1^{th}$ play, it could produce a poor value due to the noise of the arm values, resulting in an estimate for the optimal arm that is below the other arm estimates, so the optimal arm is not selected for subsequent plays. This leads to the second, smaller spike that occurs on the $2n + 1^{th}$ pull - each arm is tried once more, resulting in more accurate estimates for each arm and thus a more likely optimal choice after $2n$ pulls. This idea was confirmed through reimplementing the results in the text and examining the plays on which the spikes occur; they were indeed on the $n+1^{th}$ and $2n + 1^{th}$ pulls.
 
