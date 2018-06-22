@@ -80,14 +80,14 @@ Q_{n+1} &= Q_n + \alpha_n(R_n - Q_n) \\
 & \quad + (1 - \alpha_n)(1-\alpha_{n-1}) \cdots (1-\alpha_3)\alpha_2R_2 \\
 & \quad + (1 - \alpha_n)(1-\alpha_{n-1}) \cdots (1-\alpha_2)\alpha_1R_1 \\
 & \quad + (1 - \alpha_n)(1-\alpha_{n-1}) \cdots (1-\alpha_1)Q_1 \\
-&= \alpha_nR_n + \sum_{i=2}^{n}\Big(\alpha_{i-1}R_{i-1}\prod_{j=i}^{n}(1-\alpha_j)\Big) + Q_1\prod_{i=1}^{n}(1-\alpha_i)\\
+&= \alpha_nR_n + \sum_{i=2}^{n}\Big(\alpha_{i-1}R_{i-1}\prod_{j=i}^{n}(1-\alpha_j)\Big) + Q_1\prod_{i=1}^{n}(1-\alpha_i) \numberthis \label{eqn:2_param-weight} \\
 \end{align*}
 
 \subsection*{Exercise 2.5: Non-stationary Problems}
 
 To compare constant step-size and sample-average methods on non-stationary bandit problems, both methods were applied to 2000 random and independently chosen non-stationary bandit tasks (as per the other experiments in the text) which ran for 10000 plays. As expected, the constant step-size method performed better than the sample-average technique as it was able to track the optimal arm with greater accuracy; see Figure \ref{fig:ex2.5_non-stat}. 
 
-\begin{figure}[h]
+\begin{figure}[t]
 	\centering
 	\includegraphics[scale=0.8]{{chapter02/ex2.5_non-stat}.png}
 	\caption{A comparison of the constant step-size (CS) method with the sample-average (SA) method on a non-stationary multi-armed bandit problem. It is clear to see that CS outperforms SA, reaching more optimal action selection and thus greater total reward over time.}
@@ -98,3 +98,26 @@ To compare constant step-size and sample-average methods on non-stationary bandi
 
 The mysterious spikes seen when using optimistic action selection are dependent on the number of arms used in the bandit scenario. The first spike is the most significant and easiest to explain - the optimistic initial values mean each of the $n$ arms is pulled at least once before any arm is pulled twice, so the $n+1^{th}$ selection will be the first realistic arm choice, and assuming it is a greedy choice, there is a good chance it is the optimal arm as the algorithm has approximate value estimates for each arm already, hence the sudden jump in optimality choice after the first $n$ pulls. However, if the optimal arm is pulled on the $n + 1^{th}$ play, it could produce a poor value due to the noise of the arm values, resulting in an estimate for the optimal arm that is below the other arm estimates, so the optimal arm is not selected for subsequent plays. This leads to the second, smaller spike that occurs on the $2n + 1^{th}$ pull - each arm is tried once more, resulting in more accurate estimates for each arm and thus a more likely optimal choice after $2n$ pulls. This idea was confirmed through reimplementing the results in the text and examining the plays on which the spikes occur; they were indeed on the $n+1^{th}$ and $2n + 1^{th}$ pulls.
 
+\subsection*{Exercise 2.7: Unbiased Constant Step-Size Trick}
+
+To show that the step-size of $\beta_n = \alpha/\bar{o}_n$ produces an exponential recency-weighted average without initial bias, it is sufficient to show that the term for $Q_1$ in Equation \ref{eqn:2_param-weight} disappears when using this step-size. Thus it need only be shown that $\prod_{i=1}^{n}(1-\beta_i) = 0$. The first step in proving this is to find $\bar{o}_{n+1}$ in terms of $\alpha$:
+
+\vspace{-6mm}
+\begin{align*}
+\bar{o}_{n+1} &= \bar{o}_n + \alpha(1 - \bar{o}_n) \\
+&= \alpha + (1-\alpha)\bar{o}_n \\
+&= \alpha + (1-\alpha)\alpha + (1-\alpha)^2\bar{o}_{n-1} \\
+&= \alpha + (1-\alpha)\alpha + (1-\alpha)^2\alpha + \cdots + (1-\alpha)^t\alpha \\
+&= \alpha\sum_{i=0}^{n}(1-\alpha)^i
+\end{align*}
+
+This allows $\beta_{n+1}$ to also be found just in terms of $\alpha$:
+
+\vspace{-6mm}
+\begin{align*}
+\beta_{n+1} &= \frac{\alpha}{\bar{o}_{n+1}} \\
+&= \frac{\alpha}{\alpha\sum_{i=0}^{n}(1-\alpha)^i} \\
+&= \sum_{i=0}^{n}(1-\alpha)^{-i}
+\end{align*}
+
+As a result of the above, $\beta_1 = 1$, which proves $\prod_{i=1}^{n}(1-\beta_i) = 0$, meaning $\beta_n$ does indeed give an exponential recency-weighted average without initial bias.
