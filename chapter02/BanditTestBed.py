@@ -44,7 +44,7 @@ class Arm():
         return np.random.normal(self.mean, self.variance)
 
     def walk(self):
-        self.mean += np.random.normal(0, 0.1)
+        self.mean += np.random.normal(0, 0.01)
 
 
 def createBandit(size, nonStationary=False):
