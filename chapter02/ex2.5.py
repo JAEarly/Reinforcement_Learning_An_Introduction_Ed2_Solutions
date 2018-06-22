@@ -1,6 +1,7 @@
 from chapter02.BanditSolutions import runEGreedy, runAndPlot
 from matplotlib.pyplot import rc
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 
 _n = 10
 _plays = 10000
@@ -9,6 +10,7 @@ _repeats = 2000
 plt.style.use('grayscale')
 rc('text', usetex=True)
 plt.rc('font', family='serif')
+mpl.rcParams.update({'font.size': 14})
 
 figure, axes = plt.subplots(figsize=(8, 8), nrows=3, ncols=1)
 figure.patch.set_facecolor('w')
