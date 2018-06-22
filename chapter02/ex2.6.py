@@ -21,8 +21,8 @@ runAndPlot(axes, _repeats, _plays, _n, runEGreedy, [0.1, "constant", 0], {'step_
 
 print('\nNotice spike on 10th play:')
 print('Play', 'Optimality %')
-for i in range(8, 13):
-    print('{:^4s}'.format(str(i)), '{:^12s}'.format('{:^1.1f}'.format(optimistic_optimality[i])))
+for i in range(8, 25):
+    print('{:^4s}'.format(str(i+1)), '{:^12s}'.format('{:^1.1f}'.format(optimistic_optimality[i])), 'Spike' if i%10 == 0 else '')
 
 axes[0].set_xlabel('Plays')
 axes[0].set_ylabel('Average reward')
