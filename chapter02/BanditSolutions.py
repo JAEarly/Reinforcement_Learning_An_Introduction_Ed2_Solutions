@@ -30,13 +30,13 @@ def runAndPlot(axes, repeats, plays, bandit_size, method, config, label, nonStat
               "{:1.3f}".format(average_rewards[-1]), "{:1.3f}".format(average_optimals[-1]))
     return average_rewards, average_optimals
 
-def softmax(l, tau):
+def softmax(l):
     d = 0
     for b in l:
-        d += math.exp(b)/tau
+        d += math.exp(b)
     l1 = []
     for a in l:
-        l1.append((math.exp(a)/tau)/d)
+        l1.append(math.exp(a)/d)
     return l1
 
 
@@ -62,3 +62,37 @@ def runEGreedy(bandit, plays, epsilon, initial_estimate, step_constant):
         optimal_chosen.append(1 if chosen_arm == bandit.getOptimalArmId() else 0)
     return rewards, optimal_chosen
 
+def runUCB(bandit, plays, c):
+    arm_estimates = [0] * bandit.size()
+    arm_scores = [math.inf] * bandit.size()
+    num_pulls = [0] * bandit.size()
+    rewards = []
+    optimal_chosen = []
+    for t in range(plays):
+        m = max(arm_scores)
+        chosen_arm = np.random.choice([i for i, j in enumerate(arm_scores) if j == m])
+        reward = bandit.pull(chosen_arm)
+        num_pulls[chosen_arm] += 1
+        step_size = 1/num_pulls[chosen_arm]
+        arm_estimates[chosen_arm] += step_size*(reward - arm_estimates[chosen_arm])
+        arm_scores[chosen_arm] = arm_estimates[chosen_arm] + c*math.sqrt(math.log(t+1)/num_pulls[chosen_arm])
+        rewards.append(reward)
+        optimal_chosen.append(1 if chosen_arm == bandit.getOptimalArmId() else 0)
+    return rewards, optimal_chosen
+
+def runGradient(bandit, plays, alpha):
+    arm_preferences = [0] * bandit.size()
+    average_reward = 0
+    rewards = []
+    optimal_chosen = []
+    for t in range(plays):
+        arm_probabilities = softmax(arm_preferences)
+        chosen_arm = np.random.choice(range(bandit.size()), p=arm_probabilities)
+        reward = bandit.pull(chosen_arm)
+        average_reward += 1/(t+1)*(reward - average_reward)
+        arm_preferences[chosen_arm] += alpha*(reward - average_reward)*(1-arm_probabilities[chosen_arm])
+        for arm in [i for i in range(bandit.size()) if i != chosen_arm]:
+            arm_preferences[arm] -= alpha * (reward - average_reward) * arm_probabilities[arm]
+        rewards.append(reward)
+        optimal_chosen.append(1 if chosen_arm == bandit.getOptimalArmId() else 0)
+    return rewards, optimal_chosen
