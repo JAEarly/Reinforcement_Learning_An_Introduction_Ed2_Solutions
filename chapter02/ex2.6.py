@@ -16,13 +16,14 @@ figure, axes = plt.subplots(figsize=(8, 8), nrows=3, ncols=1)
 figure.patch.set_facecolor('w')
 
 print('Results')
-_, optimistic_optimality = runAndPlot(axes, _repeats, _plays, _n, runEGreedy, [0, "constant", 5], {'step_constant':0.1}, 'Optimistic', useSave=True)
-runAndPlot(axes, _repeats, _plays, _n, runEGreedy, [0.1, "constant", 0], {'step_constant':0.1}, 'Realistic', useSave=True)
+_, optimistic_optimality = runAndPlot(axes, _repeats, _plays, _n, runEGreedy, [0, 5, 0.1], 'Optimistic')
+runAndPlot(axes, _repeats, _plays, _n, runEGreedy, [0.1, 0, 0.1], 'Realistic')
 
 print('\nNotice spike on 10th play:')
 print('Play', 'Optimality %')
 for i in range(8, 25):
-    print('{:^4s}'.format(str(i+1)), '{:^12s}'.format('{:^1.1f}'.format(optimistic_optimality[i])), 'Spike' if i%10 == 0 else '')
+    print('{:^4s}'.format(str(i+1)), '{:^12s}'.format('{:^1.1f}'.format(optimistic_optimality[i])),
+          'Spike' if i%10 == 0 else '')
 
 axes[0].set_xlabel('Plays')
 axes[0].set_ylabel('Average reward')

@@ -16,10 +16,8 @@ figure, axes = plt.subplots(figsize=(8, 8), nrows=3, ncols=1)
 figure.patch.set_facecolor('w')
 
 print('Results')
-runAndPlot(axes, _repeats, _plays, _n, runEGreedy,
-           [0.1, "sample_average", 0], {}, 'SA', useSave=True, nonStationary=True)
-runAndPlot(axes, _repeats, _plays, _n, runEGreedy,
-           [0.1, "constant", 0], {'step_constant':0.1}, 'CS', useSave=True, nonStationary=True)
+runAndPlot(axes, _repeats, _plays, _n, runEGreedy, [0.1, 0, None], 'SA', nonStationary=True)
+runAndPlot(axes, _repeats, _plays, _n, runEGreedy, [0.1, 0, 0.1], 'CS', nonStationary=True)
 
 axes[0].set_xlabel('Plays')
 axes[0].set_ylabel('Average reward')

@@ -15,8 +15,8 @@ mpl.rcParams.update({'font.size': 14})
 figure, axes = plt.subplots(figsize=(8, 8), nrows=3, ncols=1)
 
 print('Results')
-e01avg_rwds, e01avg_optimals = runAndPlot(axes, _repeats, _plays, _n, runEGreedy, [0.1, "sample_average", 0], {}, 'e=0.1', useSave=True)
-e001avg_rwds, e001avg_optimals = runAndPlot(axes, _repeats, _plays, _n, runEGreedy, [0.01, "sample_average", 0], {}, 'e=0.01', useSave=True)
+e01avg_rwds, e01avg_optimals = runAndPlot(axes, _repeats, _plays, _n, runEGreedy, [0.1, 0, None], 'e=0.1')
+e001avg_rwds, e001avg_optimals = runAndPlot(axes, _repeats, _plays, _n, runEGreedy, [0.01, 0, None], 'e=0.01')
 
 axes[0].set_xlabel('Plays')
 axes[0].set_ylabel('Average reward')
