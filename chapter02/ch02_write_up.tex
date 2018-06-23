@@ -87,9 +87,9 @@ Q_{n+1} &= Q_n + \alpha_n(R_n - Q_n) \\
 
 To compare constant step-size and sample-average methods on non-stationary bandit problems, both methods were applied to 2000 random and independently chosen non-stationary bandit tasks (as per the other experiments in the text) which ran for 10000 plays. As expected, the constant step-size method performed better than the sample-average technique as it was able to track the optimal arm with greater accuracy; see Figure \ref{fig:ex2.5_non-stat}. 
 
-\begin{figure}[t]
+\begin{figure}[h!]
 	\centering
-	\includegraphics[scale=0.8]{{chapter02/ex2.5_non-stat}.png}
+	\includegraphics[scale=0.78]{{chapter02/ex2.5_non-stat}.png}
 	\caption{A comparison of the constant step-size (CS) method with the sample-average (SA) method on a non-stationary multi-armed bandit problem. It is clear to see that CS outperforms SA, reaching more optimal action selection and thus greater total reward over time.}
 	\label{fig:ex2.5_non-stat}
 \end{figure}
@@ -121,3 +121,7 @@ This allows $\beta_{n+1}$ to also be found just in terms of $\alpha$:
 \end{align*}
 
 As a result of the above, $\beta_1 = 1$, which proves $\prod_{i=1}^{n}(1-\beta_i) = 0$, meaning $\beta_n$ does indeed give an exponential recency-weighted average without initial bias.
+
+\subsection*{Exercise 2.8: UCB Spike}
+
+The spike in performance on the $11^{th}$ step when using the UCB algorithm shows a large increase in performance but then a decrease, albeit to a level much greater than before the spike. After the opening ten plays in which each arm is pulled once, the square-root term in the UCB action selection method is equal for all of the arms, therefore the $11^{th}$ pull is selected solely based on the arm estimates found from the first ten pulls, resulting in a greedy choice of arm which is likely to be a good if not optimal arm, hence the immediate increase in performance on the $11^{th}$ play. On the $12^{th}$ play, the square-root term is no longer the same for each arm - for the previously selected arm it is reduced by a factor of $\sqrt{2}$. As a result, other arms could have a greater score as evaluated by the UCB method, despite having potentially worse estimates. This is compounded by the fact than the previously selected arm may have a `bad' pull (return a value below its expected value), resulting in an estimate below the true value. Both of these factors result in the decrease in performance on the $12^{th}$ play as non-optimal arm selection becomes more likely. A larger value for $c$ increases the the effect of the $\sqrt{2}$ factor in the UCB action selection, as more emphasis is placed on the square-root factor rather than the value estimate. 
