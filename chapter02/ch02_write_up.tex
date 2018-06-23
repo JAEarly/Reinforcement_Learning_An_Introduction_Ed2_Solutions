@@ -125,3 +125,18 @@ As a result of the above, $\beta_1 = 1$, which proves $\prod_{i=1}^{n}(1-\beta_i
 \subsection*{Exercise 2.8: UCB Spike}
 
 The spike in performance on the $11^{th}$ step when using the UCB algorithm shows a large increase in performance but then a decrease, albeit to a level much greater than before the spike. After the opening ten plays in which each arm is pulled once, the square-root term in the UCB action selection method is equal for all of the arms, therefore the $11^{th}$ pull is selected solely based on the arm estimates found from the first ten pulls, resulting in a greedy choice of arm which is likely to be a good if not optimal arm, hence the immediate increase in performance on the $11^{th}$ play. On the $12^{th}$ play, the square-root term is no longer the same for each arm - for the previously selected arm it is reduced by a factor of $\sqrt{2}$. As a result, other arms could have a greater score as evaluated by the UCB method, despite having potentially worse estimates. This is compounded by the fact than the previously selected arm may have a `bad' pull (return a value below its expected value), resulting in an estimate below the true value. Both of these factors result in the decrease in performance on the $12^{th}$ play as non-optimal arm selection becomes more likely. A larger value for $c$ increases the the effect of the $\sqrt{2}$ factor in the UCB action selection, as more emphasis is placed on the square-root factor rather than the value estimate. 
+
+\subsection*{Exercise 2.9: Two-case Softmax}
+
+The sigmoid function mentioned is of the form $1/(1+e^{-x})$. The equivalence of the two-case softmax distribution with the sigmoid function is shown below, for actions $a_1$ and $a_2$:
+
+\vspace{-6mm}
+\begingroup
+\addtolength{\jot}{0.5em}
+\begin{align*}
+\pi_t(a_1) &= \frac{e^{H_t(a_1)}}{\sum_{b=1}^{k}e^{H_t(b)}} \\
+&= \frac{e^{H_t(a_1)}}{e^{H_t(a_1)} + e^{H_t(a_2)}} \\
+&= \frac{1}{1 + e^{H_t(a_2) - H_t(a_1)}} \\
+&= \frac{1}{1 + e^{-x}} & \text{where} \ x = H_t(a_1) - H_t(a_2)
+\end{align*}
+\endgroup
