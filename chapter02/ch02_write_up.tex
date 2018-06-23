@@ -140,3 +140,20 @@ The sigmoid function mentioned is of the form $1/(1+e^{-x})$. The equivalence of
 &= \frac{1}{1 + e^{-x}} & \text{where} \ x = H_t(a_1) - H_t(a_2)
 \end{align*}
 \endgroup
+
+\subsection*{Exercise 2.10: Two-armed Associative Search}
+
+In the first instance, where it is not known if the bandit is in case A or case B, the expected rewards for the two actions $a_1$ and $a_2$ are:
+
+\vspace{-6mm}
+\begin{align*}
+\e{R|a_1} &= 0.5 * 0.1 + 0.5 * 0.9 = 0.5 \\
+\e{R|a_2} &= 0.5 * 0.2 + 0.5 * 0.8 = 0.5 
+\end{align*}
+
+As the expected rewards are the same for both actions, it actually makes no difference which arm is picked, therefore there is no better strategy than pulling at random. \\
+
+The second instance is an associative search task since the state of the bandit (case A or case B) is now known. Assuming the optimum arm is pulled in each case, $\e{R} = 0.5 * 0.2 + 0.5 * 0.9 = 0.55$. To achieve this, the bandit should pull $a_2$ in state A and $a_1$ in state B - this can be done by associating different value estimates with different states.
+
+
+
